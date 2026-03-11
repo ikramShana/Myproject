@@ -1,5 +1,4 @@
-
-peline {
+pipeline {
     agent any
  
     environment {
@@ -45,6 +44,50 @@ peline {
     }
  
 }
+
+ 
+    
+    
+        
+        
+    
+ 
+    
+       
+
+
+            
+        
+ 
+
+            
+
+            
+        
+ 
+       
+      
+       
+        
+  
+   
+
+ 
+
+
+ 
+
+
+
+
+
+                
+            
+
+ 
+
+ 
+
 
 
 
