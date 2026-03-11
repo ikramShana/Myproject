@@ -1,91 +1,49 @@
-
 pipeline {
     agent any
 
     environment {
-        AWS_REGION = "us-east-1"
-        S3_BUCKET = "firsttime-project"                          // ✅ Fix 1: Removed trailing space
-        CLOUDFRONT_DISTRIBUTION_ID = "EC9MB9L956EWG"
+        AWS_REGION = 'us-east-1'
+        S3_BUCKET = 'firsttime-project'
+        CLOUDFRONT_DISTRIBUTION_ID = 'EC9MB9L956EWG'
     }
 
     stages {
-
-        stage('Checkout') {
+        stage('checkout') {
             steps {
-                checkout scm                                      // ✅ Fix 3: Dynamic branch checkout instead of hardcoded
+                git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/ikramShana/Myproject.git'
             }
         }
 
-        stage('Select Environment File') {
+        stage('install npm dependencies') {
             steps {
-                script {
-                    def ENV_FILE
-
-                    if (env.BRANCH_NAME == "ikramShana") {
-                        ENV_FILE = ".env.production"
-                    }
-                    else if (env.BRANCH_NAME == "testing") {     // ✅ Fix 2: Changed duplicate "ikramShana" to "testing"
-                        ENV_FILE = ".env.testing"
-                    }
-                    else {
-                        ENV_FILE = ".env.local"
-                    }
-
-                    echo "Using environment file: ${ENV_FILE}"
-                    sh "cp ${ENV_FILE} .env"
-                }
-            }
-        }
-
-        stage('Cleanup & Install') {
-            steps {
-                sh '''
-                    echo "Cleaning old files and npm cache..."
-                    rm -rf node_modules
+                sh ''' 
+                    rm -rf node_modules package-lock.json
                     npm cache clean --force
-
-                    echo "Installing dependencies..."
-                    npm ci
-                '''
+                    npm install --legacy-peer-deps || true
+                '''    
             }
         }
 
-        stage('Build React App') {
+        stage('npm run build') {
             steps {
                 sh 'npm run build'
             }
         }
 
-        stage('Verify Build') {
+        stage('move build static files to s3 bucket') {
             steps {
-                sh 'ls -la dist'
-            }
-        }
-
-        stage('Deploy to S3') {
-            steps {
-                withAWS(credentials: 'aws-access-key', region: "${AWS_REGION}") {   // ✅ Fix 4: Removed extra 's' in credentials ID
-                    sh "aws s3 sync dist/ s3://${S3_BUCKET}/ --delete"
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-accesss-key']]) {
+                    sh "/usr/local/bin/aws s3 sync frontend/build/ s3://${S3_BUCKET} --delete"
                 }
             }
         }
 
-        stage('CloudFront Invalidation') {
+        stage('invalidate cloudfront cache') {
             steps {
-                withAWS(credentials: 'aws-access-key', region: "${AWS_REGION}") {   // ✅ Fix 4: Removed extra 's' in credentials ID
-                    sh "aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths '/*'"
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-accesss-key']]) {
+                    sh "/usr/local/bin/aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths '/*'"
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo "SUCCESS: Frontend deployed to CloudFront!"
-        }
-        failure {
-            echo "FAILURE: Build or Deployment failed."
         }
     }
 }
-
