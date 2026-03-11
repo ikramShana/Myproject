@@ -71,7 +71,7 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4",
-    "vite-plugin-pwa": "^0.19.8",
+    "vite-plugin-pwa": "^1.2.0",
     "workbox-core": "^7.3.0",
     "workbox-expiration": "^7.3.0",
     "workbox-precaching": "^7.3.0",

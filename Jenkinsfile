@@ -1,4 +1,4 @@
-pipeline {
+peline {
     agent any
 
     environment {
@@ -10,19 +10,19 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/ikramShana/Myproject.git'
+                git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/ikramShana/Myproject.git'
             }
         }
 
         stage('install npm dependencies') {
             steps {
-                sh 'npm install'
+                sh 'npm install --legacy-peer-deps'
             }
         }
 
         stage('npm run build') {
             steps {
-                sh 'npm run build'
+                sh 'npx vite build'
             }
         }
 
@@ -42,7 +42,32 @@ pipeline {
             }
         }
     }
-}
+}       
+        
+
+
+
+
+           
+      
+
+        
+            
+                
+                    
+           
+        
+    
+
+  
+    
+                
+                    
+                
+           
+        
+
+
 
 
 
