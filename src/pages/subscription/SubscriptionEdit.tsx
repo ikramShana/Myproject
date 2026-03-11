@@ -118,11 +118,11 @@ const SubscriptionEdit = () => {
 
         try {
             const res = await EditSubscription(payload);
-            console.log("Subscription Edited Successfully:", res);  
-            if (res.success) {
+            console.log("Subscription Edited Successfully:", res);
+            if (res?.data?.success) {
                 navigate("/subscriptions", { state: { updatedPlan: payload } });
             } else {
-                console.error("Edit failed:", res.message || "Unknown error");
+                console.error("Edit failed:", res?.data?.message || "Unknown error");
             }
         } catch (error) {
             console.error("Error Editing subscription:", error);
@@ -233,7 +233,7 @@ const SubscriptionEdit = () => {
                         />
 
                         {["Students", "Teachers", "Courses"].map((label) => {
-                            const feature = formData.features.find((f: any) => f.featureName  === label);
+                            const feature = formData.features.find((f: any) => f.featureName === label);
                             return (
                                 <div key={label} className="mb-4">
                                     <label className="font-semibold block mb-1">Number of {label}</label>
