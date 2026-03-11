@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-                git credentialsId: 'git-cred', url: 'https://github.com/ikramShana/Myproject.git'
+                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/ikramShana/Myproject.git'
             }
         }
 
@@ -43,3 +43,12 @@ pipeline {
         }
     }
 }
+```
+
+---
+
+**Step 4 — Save and exit**
+```
+Esc
+:wq
+Enter
