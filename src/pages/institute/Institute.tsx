@@ -250,13 +250,7 @@ const Institutes: React.FC = () => {
   //   //   },
   //   // ]);
   // }, [filteredInstitutes, instituteData]);
-
-  // Update institute plan
-  const updateInstitutePlan = (id: number, newPlan: string) => {
-    console.log(`Updating institute ${id} to plan ${newPlan}`);
-  };
-
-  // Update institute status
+ // Update institute status
   const updateInstituteStatus = (id: number, newStatus: string) => {
     console.log(`Updating institute ${id} to status ${newStatus}`);
   };
