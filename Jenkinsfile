@@ -23,7 +23,7 @@ pipeline {
 
         stage('npm run build') {
             steps {
-                sh 'npx vite build'
+                sh 'npm run build'
             }
         }
 
